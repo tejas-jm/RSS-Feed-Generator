@@ -6,7 +6,7 @@ import { renderRSS } from '@/lib/templates/rss';
 import { renderAtom } from '@/lib/templates/atom';
 import { renderJsonFeed } from '@/lib/templates/jsonfeed';
 import { setCache } from '@/lib/utils/cache';
-import { pino } from 'pino';
+import pino from 'pino';
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 

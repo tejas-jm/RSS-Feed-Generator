@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { test, expect } from '@playwright/test';
 import { parseItems } from '@/lib/scraping/parse';
 import { FieldsConfig } from '@/lib/scraping/types';
 import { renderRSS } from '@/lib/templates/rss';
@@ -19,50 +19,48 @@ const sampleHtml = `
 </section>
 `;
 
-describe('feed builder pipeline', () => {
-  it('produces valid RSS output', () => {
-    const config: FieldsConfig = {
-      itemList: { selector: '.stories' },
-      item: { selector: 'article' },
-      title: { selector: 'h2 a', attr: 'text' },
-      link: { selector: 'h2 a', attr: 'href', absoluteUrl: true },
-      description: { selector: '.summary', attr: 'text' },
-      date: { selector: 'time', attr: 'datetime', dateFormat: 'yyyy-MM-dd' },
-    };
-    const items = parseItems(sampleHtml, 'https://example.com/news', config);
-    expect(items).toHaveLength(2);
-    const feed: Feed = {
-      id: 'feed-demo',
-      name: 'Demo Feed',
-      baseUrl: 'https://example.com/news',
-      listSelector: null,
-      fields: config as any,
-      transform: null,
-      schedule: '0 * * * *',
-      format: 'rss',
-      maxItems: 20,
-      dedupKey: 'link',
-      isPaused: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    const feedItems: FeedItem[] = items.map((item, index) => ({
-      id: `item-${index}`,
-      feedId: feed.id,
-      guid: item.guid,
-      title: item.title,
-      link: item.link,
-      description: item.description,
-      date: item.date ? new Date(item.date) : null,
-      image: item.image,
-      author: item.author,
-      category: item.category,
-      tags: item.tags ?? [],
-      custom: item.custom ?? null,
-      createdAt: new Date(),
-    }));
-    const rss = renderRSS(feed, feedItems);
-    expect(rss).toContain('<rss');
-    expect(rss).toContain('<item>');
-  });
+test('full pipeline produces valid RSS', async () => {
+  const config: FieldsConfig = {
+    itemList: { selector: '.stories' },
+    item: { selector: 'article' },
+    title: { selector: 'h2 a', attr: 'text' },
+    link: { selector: 'h2 a', attr: 'href', absoluteUrl: true },
+    description: { selector: '.summary', attr: 'text' },
+    date: { selector: 'time', attr: 'datetime', dateFormat: 'yyyy-MM-dd' },
+  };
+  const items = parseItems(sampleHtml, 'https://example.com/news', config);
+  expect(items).toHaveLength(2);
+  const feed: Feed = {
+    id: 'feed-demo',
+    name: 'Demo Feed',
+    baseUrl: 'https://example.com/news',
+    listSelector: null,
+    fields: config as any,
+    transform: null,
+    schedule: '0 * * * *',
+    format: 'rss',
+    maxItems: 20,
+    dedupKey: 'link',
+    isPaused: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  const feedItems: FeedItem[] = items.map((item, index) => ({
+    id: `item-${index}`,
+    feedId: feed.id,
+    guid: item.guid,
+    title: item.title,
+    link: item.link,
+    description: item.description,
+    date: item.date ? new Date(item.date) : null,
+    image: item.image,
+    author: item.author,
+    category: item.category,
+    tags: item.tags ?? [],
+    custom: item.custom ?? null,
+    createdAt: new Date(),
+  }));
+  const rss = renderRSS(feed, feedItems);
+  expect(rss).toContain('<rss');
+  expect(rss).toContain('<item>');
 });
