@@ -1,0 +1,56 @@
+{
+  "name": "rss-feed-generator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/client": "5.10.2",
+    "cheerio": "1.0.0-rc.12",
+    "chrono-node": "2.3.7",
+    "date-fns": "3.2.0",
+    "dotenv": "16.3.1",
+    "ioredis": "5.3.2",
+    "luxon": "3.4.3",
+    "next": "14.2.5",
+    "next-auth": "4.24.13",
+    "node-cron": "3.0.3",
+    "pino": "10.1.0",
+    "playwright": "1.55.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwind-merge": "1.14.0",
+    "tailwindcss-animate": "1.0.7",
+    "zod": "3.22.4",
+    "bcryptjs": "2.4.3",
+    "xpath": "0.0.32",
+    "@xmldom/xmldom": "0.8.10",
+    "sanitize-html": "2.12.1",
+    "lucide-react": "0.322.0",
+    "clsx": "2.1.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "0.22.35",
+    "@types/node": "20.10.4",
+    "@types/react": "18.2.25",
+    "@types/react-dom": "18.2.11",
+    "@types/node-cron": "3.0.7",
+    "autoprefixer": "10.4.16",
+    "postcss": "8.4.31",
+    "prisma": "5.10.2",
+    "tailwindcss": "3.3.5",
+    "ts-node": "10.9.1",
+    "typescript": "5.3.3",
+    "vitest": "1.6.0"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  }
+}

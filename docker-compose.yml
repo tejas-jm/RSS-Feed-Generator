@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_PROVIDER: sqlite
+      DATABASE_URL: file:/app/data/dev.db
+      REDIS_URL: redis://redis:6379
+      NEXTAUTH_SECRET: change-me
+      NEXTAUTH_URL: http://localhost:3000
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: changeme
+      ALLOW_ROBOTS: 'false'
+      MAX_CONCURRENCY: '2'
+      REQUEST_TIMEOUT_MS: '20000'
+      USER_AGENT: RSS Feed Generator Bot/1.0
+    volumes:
+      - ./prisma:/app/prisma
+      - sqlite-data:/app/data
+    depends_on:
+      - redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+volumes:
+  sqlite-data:
+  redis-data:
