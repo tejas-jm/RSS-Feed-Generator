@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = env("DATABASE_PROVIDER")
+  url      = env("DATABASE_URL")
+}
+
+model Feed {
+  id           String    @id @default(cuid())
+  name         String
+  baseUrl      String
+  listSelector String?
+  fields       Json
+  transform    Json?
+  schedule     String
+  format       String
+  maxItems     Int       @default(50)
+  dedupKey     String    @default("link")
+  isPaused     Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  runs         FeedRun[]
+  items        FeedItem[]
+}
+
+model FeedRun {
+  id         String   @id @default(cuid())
+  feedId     String
+  startedAt  DateTime @default(now())
+  finishedAt DateTime?
+  status     String
+  message    String?
+  itemCount  Int      @default(0)
+  feed       Feed     @relation(fields: [feedId], references: [id], onDelete: Cascade)
+}
+
+model FeedItem {
+  id          String   @id @default(cuid())
+  feedId      String
+  guid        String
+  title       String?
+  link        String?
+  description String?
+  date        DateTime?
+  image       String?
+  author      String?
+  category    String?
+  tags        String[]
+  custom      Json?
+  createdAt   DateTime @default(now())
+  feed        Feed     @relation(fields: [feedId], references: [id], onDelete: Cascade)
+
+  @@index([feedId, guid])
+}
